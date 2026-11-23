@@ -6,12 +6,35 @@
 
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import { updateMessage } from "@api/MessageUpdater";
-import { FluxDispatcher, Menu, MessageActions, React, showToast,SortedGuildStore, UserStore } from "@webpack/common";
+import { FluxDispatcher, Menu, MessageActions, React, showToast, SortedGuildStore, UserStore } from "@webpack/common";
 
+import { addToXAndRemoveFromOpposite, ListType, removeFromX } from ".";
 import { openLogModal } from "../components/LogsModal";
 import { deleteMessageIDB } from "../db";
 import { settings } from "../index";
-import { addToXAndRemoveFromOpposite, ListType, removeFromX } from ".";
+import { IconComponent } from "@utils/types";
+
+const MessageLoggerIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="translate(0 0) scale(0.833333) translate(0 0)">
+                <path d="M19 17V5a2 2 0 0 0-2-2H4" />
+                <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" />
+            </g>
+        </svg>
+    );
+};
 
 const idFunctions = {
     Folder: props =>
@@ -100,6 +123,8 @@ export const contextMenuPath: NavContextMenuPatchCallback = (children, props) =>
             <Menu.MenuItem
                 id="message-logger"
                 label="Message Logger"
+                icon={MessageLoggerIcon}
+                leadingAccessory={{ type: "icon", icon: MessageLoggerIcon }}
             >
 
                 <Menu.MenuItem

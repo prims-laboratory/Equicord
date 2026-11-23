@@ -6,9 +6,55 @@
 
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { Devs } from "@utils/constants";
-import definePlugin from "@utils/types";
+import definePlugin, { IconComponent } from "@utils/types";
 import { Channel, Message, User } from "@vencord/discord-types";
 import { ChannelStore, Constants, Menu, NavigationRouter, RestAPI, SelectedChannelStore, SelectedGuildStore, showToast } from "@webpack/common";
+
+const JumpToFirstIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="scale(0.833333)">
+                <path d="M5 3h14" />
+                <path d="m18 13-6-6-6 6" />
+                <path d="M12 7v14" />
+            </g>
+        </svg>
+    );
+};
+
+const JumpToLastIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="scale(0.833333)">
+                <path d="M12 17V3" />
+                <path d="m6 11 6 6 6-6" />
+                <path d="M19 21H5" />
+            </g>
+        </svg>
+    );
+};
 
 function jumpToFirstMessage(channelId: string, guildId?: string | null) {
     NavigationRouter.transitionTo(`/channels/${guildId ?? "@me"}/${channelId}/0`);
@@ -65,11 +111,15 @@ const ChannelMenuPatch: NavContextMenuPatchCallback = (
             id="vc-jump-to-first"
             label="Jump To First Message"
             action={() => jumpToFirstMessage(targetChannel.id, targetChannel.guild_id)}
+            icon={JumpToFirstIcon}
+            leadingAccessory={{ type: "icon", icon: JumpToFirstIcon }}
         />,
         <Menu.MenuItem
             id="vc-jump-to-last"
             label="Jump To Last Message"
             action={() => jumpToLastMessage(targetChannel.id, targetChannel.guild_id)}
+            icon={JumpToLastIcon}
+            leadingAccessory={{ type: "icon", icon: JumpToLastIcon }}
         />
     );
 };
@@ -82,11 +132,15 @@ const UserMenuPatch: NavContextMenuPatchCallback = (children, { user, channel }:
             id="vc-jump-to-first"
             label="Jump To First Message"
             action={() => jumpToFirstMessage(channel.id, null)}
+            icon={JumpToFirstIcon}
+            leadingAccessory={{ type: "icon", icon: JumpToFirstIcon }}
         />,
         <Menu.MenuItem
             id="vc-jump-to-last"
             label="Jump To Last Message"
             action={() => jumpToLastMessage(channel.id, null)}
+            icon={JumpToLastIcon}
+            leadingAccessory={{ type: "icon", icon: JumpToLastIcon }}
         />
     );
 };
@@ -101,11 +155,15 @@ const MessageMenuPatch: NavContextMenuPatchCallback = (children, { message }: { 
             id="vc-jump-to-first-user"
             label="Jump To First Message"
             action={() => jumpToUserMessage(channelId, guildId, message.author.id, true)}
+            icon={JumpToFirstIcon}
+            leadingAccessory={{ type: "icon", icon: JumpToFirstIcon }}
         />,
         <Menu.MenuItem
             id="vc-jump-to-last-user"
             label="Jump To Last Message"
             action={() => jumpToUserMessage(channelId, guildId, message.author.id, false)}
+            icon={JumpToLastIcon}
+            leadingAccessory={{ type: "icon", icon: JumpToLastIcon }}
         />
     );
 };

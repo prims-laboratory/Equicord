@@ -6,23 +6,48 @@
 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { definePluginSettings } from "@api/Settings";
-import { InfoIcon } from "@components/Icons";
 import { Devs, EquicordDevs } from "@utils/constants";
-import definePlugin, { OptionType } from "@utils/types";
+import definePlugin, { IconComponent, OptionType } from "@utils/types";
 import { Guild } from "@vencord/discord-types";
 import { Menu } from "@webpack/common";
 
 import { openGuildInfoModal } from "./GuildInfoModal";
 
+const ServerInfoIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="translate(0 0) scale(0.833333) translate(0 0)">
+                <circle cx="12"
+                    cy="12"
+                    r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+            </g>
+        </svg>
+    );
+};
+
 const makePatch: (showIcon: boolean) => NavContextMenuPatchCallback = showIcon => (children, { guild }: { guild: Guild; }) => {
     const group = findGroupChildrenByChildId("privacy", children);
 
-    group?.push(
+    children.push(
         <Menu.MenuItem
             id="vc-server-info"
             label="Server Info"
-            leadingAccessory={showIcon ? { type: "icon", icon: InfoIcon } : undefined}
             action={() => openGuildInfoModal(guild)}
+            icon={ServerInfoIcon}
+            leadingAccessory={{ type: "icon", icon: ServerInfoIcon }}
         />
     );
 };

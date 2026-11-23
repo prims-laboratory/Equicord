@@ -6,10 +6,61 @@
 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { Devs, EquicordDevs } from "@utils/constants";
-import definePlugin from "@utils/types";
+import definePlugin, { IconComponent } from "@utils/types";
 import type { Guild } from "@vencord/discord-types";
 import { EmojiStore, Menu, StickersStore } from "@webpack/common";
 import { zipSync } from "fflate";
+
+const DownloadEmojisIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="translate(0 0) scale(0.833333) translate(0 0)">
+                <path d="M15 10V9" />
+                <path d="M8 16h8" />
+                <path d="M9 10V9" />
+                <circle cx="12"
+                    cy="12"
+                    r="10" />
+            </g>
+        </svg>
+    );
+};
+
+const DownloadStickersIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="translate(0 0) scale(0.833333) translate(0 0)">
+                <path d="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" />
+                <path d="M15 3v5a1 1 0 0 0 1 1h5" />
+                <path d="M8 13h.01" />
+                <path d="M16 13h.01" />
+                <path d="M10 16s.8 1 2 1c1.3 0 2-1 2-1" />
+            </g>
+        </svg>
+    );
+};
 
 const StickerExt = [, "png", "apng", "json", "gif"] as const;
 
@@ -20,8 +71,8 @@ const Patch: NavContextMenuPatchCallback = (children, { guild }: { guild: Guild;
     if (group) {
         group.push(
             <>
-                <Menu.MenuItem id="emoji.download" label="Download Emojis" action={() => zipGuildAssets(guild, "emojis")}></Menu.MenuItem>
-                <Menu.MenuItem id="sticker.download" label="Download Stickers" action={() => zipGuildAssets(guild, "stickers")}></Menu.MenuItem>
+                <Menu.MenuItem id="emoji.download" label="Download Emojis" action={() => zipGuildAssets(guild, "emojis")} icon={DownloadEmojisIcon} leadingAccessory={{ type: "icon", icon: DownloadEmojisIcon }}></Menu.MenuItem>
+                <Menu.MenuItem id="sticker.download" label="Download Stickers" action={() => zipGuildAssets(guild, "stickers")} icon={DownloadStickersIcon} leadingAccessory={{ type: "icon", icon: DownloadStickersIcon }}></Menu.MenuItem>
             </>
         );
     }

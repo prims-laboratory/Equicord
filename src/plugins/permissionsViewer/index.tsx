@@ -26,7 +26,7 @@ import { SafetyIcon } from "@components/Icons";
 import { TooltipContainer } from "@components/TooltipContainer";
 import { Devs } from "@utils/constants";
 import { classes } from "@utils/misc";
-import definePlugin, { OptionType } from "@utils/types";
+import definePlugin, { IconComponent, OptionType } from "@utils/types";
 import type { Guild, RoleOrUserPermission } from "@vencord/discord-types";
 import { PermissionOverwriteType } from "@vencord/discord-types/enums";
 import { findCssClassesLazy } from "@webpack";
@@ -35,6 +35,27 @@ import { ChannelStore, Dialog, GuildMemberStore, GuildRoleStore, GuildStore, mat
 import openRolesAndUsersPermissionsModal from "./components/RolesAndUsersPermissions";
 import UserPermissions from "./components/UserPermissions";
 import { getSortedRolesForMember, loadGetGuildPermissionSpecMap, sortPermissionOverwrites } from "./utils";
+
+const ViewPermissionsIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="translate(0 0) scale(0.833333) translate(0 0)">
+                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+            </g>
+        </svg>
+    );
+};
 
 const PopoutClasses = findCssClassesLazy("container", "popoutRoleDot");
 
@@ -67,7 +88,8 @@ function MenuItem(guildId: string, { id, type, withIcon }: { id?: string, type?:
         <Menu.MenuItem
             id="perm-viewer-permissions"
             label="View Permissions"
-            leadingAccessory={withIcon ? { type: "icon", icon: SafetyIcon } : undefined}
+            icon={ViewPermissionsIcon}
+            leadingAccessory={{ type: "icon", icon: ViewPermissionsIcon }}
             action={() => {
                 const guild = GuildStore.getGuild(guildId);
 
@@ -149,7 +171,7 @@ function makeContextMenuPatch(childId: string | string[], type?: MenuItemParentT
         if (item == null) return;
 
         if (group) {
-            return group.push(item);
+            return children.push(item);
         }
 
         // "roles" may not be present due to the member not having any roles. In that case, add it above "Copy ID"

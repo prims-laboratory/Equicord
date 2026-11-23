@@ -24,10 +24,48 @@ import { definePluginSettings } from "@api/Settings";
 import { CogWheel } from "@components/Icons";
 import { Devs } from "@utils/constants";
 import { sleep } from "@utils/misc";
-import definePlugin, { OptionType } from "@utils/types";
+import definePlugin, { IconComponent, OptionType } from "@utils/types";
 import { Guild } from "@vencord/discord-types";
 import { findByCodeLazy, findByPropsLazy, mapMangledModuleLazy } from "@webpack";
 import { ChannelStore, CollapsedVoiceChannelStore, Menu, SortedGuildStore, UserStore } from "@webpack/common";
+
+const ApplyNewGuildSettingsIcon: IconComponent = ({ height = 20, width = 20, className }) => {
+    return (
+        <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            width={width}
+            height={height}
+            className={className}
+        >
+            <g transform="translate(0 0) scale(0.833333) translate(0 0)">
+                <path d="M11 10.27 7 3.34" />
+                <path d="m11 13.73-4 6.93" />
+                <path d="M12 22v-2" />
+                <path d="M12 2v2" />
+                <path d="M14 12h8" />
+                <path d="m17 20.66-1-1.73" />
+                <path d="m17 3.34-1 1.73" />
+                <path d="M2 12h2" />
+                <path d="m20.66 17-1.73-1" />
+                <path d="m20.66 7-1.73 1" />
+                <path d="m3.34 17 1.73-1" />
+                <path d="m3.34 7 1.73 1" />
+                <circle cx="12"
+                    cy="12"
+                    r="2" />
+                <circle cx="12"
+                    cy="12"
+                    r="8" />
+            </g>
+        </svg>
+    );
+};
 
 const { updateGuildNotificationSettings } = findByPropsLazy("updateGuildNotificationSettings");
 const { toggleShowAllChannels } = mapMangledModuleLazy(".onboardExistingMember(", {
@@ -99,12 +137,12 @@ const makeContextMenuPatch: (shouldAddIcon: boolean) => NavContextMenuPatchCallb
         const group = findGroupChildrenByChildId("privacy", children);
         if (!group) return;
 
-        group.push(
+        children.push(
             <Menu.MenuItem
                 label="Apply NewGuildSettings"
                 id="vc-newguildsettings-apply"
-                icon={shouldAddIcon ? CogWheel : void 0}
-                leadingAccessory={shouldAddIcon ? { type: "icon", icon: CogWheel } : void 0}
+                icon={ApplyNewGuildSettingsIcon}
+                leadingAccessory={{ type: "icon", icon: ApplyNewGuildSettingsIcon }}
                 action={() => applyDefaultSettings(guild.id)}
             />
         );
@@ -117,8 +155,8 @@ const makeContextMenuPatch: (shouldAddIcon: boolean) => NavContextMenuPatchCallb
             <Menu.MenuItem
                 label="Apply NewGuildSettings to Folder"
                 id="vc-newguildsettings-apply-folder"
-                icon={shouldAddIcon ? CogWheel : void 0}
-                leadingAccessory={shouldAddIcon ? { type: "icon", icon: CogWheel } : void 0}
+                icon={ApplyNewGuildSettingsIcon}
+                leadingAccessory={{ type: "icon", icon: ApplyNewGuildSettingsIcon }}
                 action={async () => {
                     for (const guildId of folder.guildIds) {
                         applyDefaultSettings(guildId);
